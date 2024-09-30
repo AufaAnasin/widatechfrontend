@@ -2,7 +2,7 @@ import { useState } from "react";
 import PropTypes from "prop-types"; // Import PropTypes
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 
-function SuggestionCard({ name, price, stock, productId, image, onDelete }) {
+function SuggestionCard({ name, price, stock, productId, onDelete }) {
   const [quantity, setQuantity] = useState(1); // State to keep track of product quantity
 
   // Function to increase quantity, ensuring it does not exceed the stock

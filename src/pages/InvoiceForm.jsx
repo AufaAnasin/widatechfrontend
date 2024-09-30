@@ -10,6 +10,9 @@ import {
   Button,
 } from "react-bootstrap";
 import SuggestionCard from "../components/SuggestionCard";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setApiResponse } from "../store/invoiceSlice";
 
 function InvoiceForm() {
   const [date, setDate] = useState("");
@@ -19,6 +22,8 @@ function InvoiceForm() {
   const [customerName, setCustomerName] = useState("");
   const [salespersonName, setSalespersonName] = useState("");
   const [notes, setNotes] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Fetch suggestions based on query
   const fetchSuggestion = async (query) => {
@@ -45,7 +50,6 @@ function InvoiceForm() {
 
   // Handle product selection
   const handleSelectProduct = (product) => {
-    // Add the selected product to the selectedProducts array with a default quantity of 1
     setSelectedProducts((prevProducts) => [
       ...prevProducts,
       { ...product, quantity: 1 },
@@ -56,7 +60,6 @@ function InvoiceForm() {
 
   // Handle removing a selected product
   const handleRemoveProduct = (productId) => {
-    // Filter out the product from the selectedProducts array
     setSelectedProducts((prevProducts) =>
       prevProducts.filter((p) => p.productId !== productId)
     );
@@ -86,13 +89,15 @@ function InvoiceForm() {
     };
 
     try {
-      // Send POST request to the backend API
-      const response = await axios.post("http://localhost:4080/api/invoice", data);
+      const response = await axios.post(
+        "http://localhost:4080/api/invoice",
+        data
+      );
+      dispatch(setApiResponse(response.data));
+      navigate("/invoice");
       console.log("Invoice created:", response.data);
-      // You can add success handling here (e.g., showing a message, resetting form, etc.)
     } catch (error) {
       console.error("Error creating invoice:", error);
-      // Handle error response from backend
     }
   };
 
@@ -102,7 +107,8 @@ function InvoiceForm() {
         <Navbar className="bg-body-tertiary">
           <Container className="d-flex flex-row align-items-center">
             <Navbar.Brand href="#home" className="d-flex align-items-center">
-              <i className="bi bi-bezier me-2" style={{ color: "blue" }}></i> <span>Sales Insight</span>
+              <i className="bi bi-bezier me-2" style={{ color: "blue" }}></i>{" "}
+              <span>Sales Insight</span>
             </Navbar.Brand>
           </Container>
         </Navbar>
